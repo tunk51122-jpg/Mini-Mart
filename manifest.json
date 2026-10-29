@@ -1,15 +1,16 @@
 {
-  "name": "Minimart POS",
-  "short_name": "Minimart",
+  "name": "Store Mini POS & Cloud",
+  "short_name": "StoreMini",
+  "description": "Store Mini - Offline & Firebase Cloud Minimart POS",
   "start_url": "./index.html",
   "display": "standalone",
-  "background_color": "#ffffff",
+  "background_color": "#f3f4f6",
   "theme_color": "#3b82f6",
   "icons": [
     {
-      "src": "https://cdn-icons-png.flaticon.com/512/1055/1055672.png",
-      "sizes": "512x512",
-      "type": "image/png"
+      "src": "data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='22' fill='%233b82f6'/><text x='50' y='68' font-size='50' text-anchor='middle' fill='white'>🏪</text></svg>",
+      "sizes": "192x192 512x512",
+      "type": "image/svg+xml"
     }
   ]
 }
