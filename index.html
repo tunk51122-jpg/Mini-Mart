@@ -674,7 +674,7 @@
         <div>
           <label style="font-size: 12px; opacity: 0.75; display: block; margin-bottom: 3px;" id="lblLoginPassword">Password</label>
           <div style="position: relative;">
-            <input type="password" id="loginPasswordInput" class="input-field" placeholder="••••••••" required value="password123">
+            <input type="password" id="loginPasswordInput" class="input-field" placeholder="••••••••" required>
             <button type="button" id="togglePasswordBtn" class="btn-ghost btn-sm" style="position: absolute; right: 4px; top: 4px; padding: 5px 8px;">
               <i class="fas fa-eye" id="togglePasswordIcon"></i>
             </button>
@@ -1184,8 +1184,8 @@
                 <i class="fas fa-file-import"></i> <span id="lblBtnImport">Restore from Backup</span>
                 <input type="file" id="importDataFileInput" accept=".json" style="display: none;">
               </label>
-              <button id="resetInitialDataBtn" class="btn-ghost btn-sm" style="color: var(--danger); margin-left: auto;">
-                <i class="fas fa-rotate-left"></i> <span id="lblBtnReset">Reset Demo Data</span>
+              <button id="resetInitialDataBtn" class="btn-ghost btn-sm" style="color: var(--danger); margin-left: auto;" title="ဆိုင်ရှင် Password ဖြင့်သာ ရှင်းလင်းနိုင်ပါသည်">
+                <i class="fas fa-trash-can"></i> <span id="lblBtnReset">Demo စာရင်းများ ရှင်းလင်းမည်</span>
               </button>
             </div>
           </div>
@@ -1787,7 +1787,7 @@
           lblBackupSub: 'Export your store database as JSON or restore on another phone/PC',
           lblBtnExport: 'Export JSON Backup',
           lblBtnImport: 'Restore from Backup',
-          lblBtnReset: 'Reset Demo Data',
+          lblBtnReset: 'Clear Demo Data',
           lblViewCart: 'View Cart',
           mobNavPos: 'POS',
           mobNavProd: 'Products',
@@ -1927,7 +1927,7 @@
           lblBackupSub: 'ဒေတာများကို Backup ဖိုင်အဖြစ် သိမ်းဆည်းပြီး ဖုန်းလဲသည့်အခါ ပြန်လည်တင်သွင်းနိုင်သည်',
           lblBtnExport: 'Export JSON Backup',
           lblBtnImport: 'Restore from Backup',
-          lblBtnReset: 'Reset Demo Data',
+          lblBtnReset: 'Clear Demo Data',
           lblViewCart: 'ကြည့်မည်',
           mobNavPos: 'အရောင်း',
           mobNavProd: 'ကုန်စည်',
@@ -3986,10 +3986,38 @@
       });
 
       document.getElementById('resetInitialDataBtn').addEventListener('click', () => {
-        db = JSON.parse(JSON.stringify(INITIAL_DB));
-        saveDatabase();
-        renderAll();
-        showToast('Demo data reset');
+        requireOwnerAuth(() => {
+          const isRealStore = (db.sales && db.sales.length > 2) || (db.products && db.products.length > 5);
+          const confirmMsg = isRealStore
+            ? (currentLang === 'mm' 
+                ? '⚠️ သတိပေးချက်: လက်ရှိ ဆိုင်စာရင်းထဲတွင် အမှန်တကယ် ရောင်းချထားသော စာရင်းများနှင့် ကုန်ပစ္စည်းများ ရှိနေပါသည်။ ဒေတာအားလုံးကို ရှင်းလင်းပြီး မူလအခြေအနေသို့ ပြန်ထားမည်မှာ သေချာပါသလား?'
+                : 'WARNING: Real store sales and products exist. Are you sure you want to reset all data?')
+            : (currentLang === 'mm'
+                ? 'နမူနာ Demo စာရင်းများကို ရှင်းလင်းပြီး ဆိုင်သစ်အတွက် စာရင်းအသစ် စတင်မည်မှာ သေချာပါသလား?'
+                : 'Clear demo data and start with clean store?');
+
+          if (!confirm(confirmMsg)) return;
+
+          const cleanStart = confirm(currentLang === 'mm' 
+            ? 'ပစ္စည်းစာရင်းနှင့် အရောင်းစာရင်း အားလုံးကို ရှင်းလင်းပြီး ဆိုင်သစ်အတွက် အလွတ် (Zero-Data) စတင်လိုပါသလား?\n\n[OK = ဆိုင်သစ်အတွက် အလွတ်စတင်မည် / Cancel = မူလ Demo ပစ္စည်း ၅ မျိုးအတိုင်း ပြန်ထားမည်]'
+            : 'Start with 0 products for new store? [OK = Clean empty store / Cancel = Restore 5 demo products]');
+
+          if (cleanStart) {
+            db.products = [];
+            db.sales = [];
+            db.expenses = [];
+            db.stockMovements = [];
+            db.cart = [];
+            db.removedItems = [];
+            showToast(currentLang === 'mm' ? 'ဆိုင်သစ်အတွက် ပစ္စည်းစာရင်းအလွတ် စတင်ပြီးပါပြီ' : 'Clean store initialized with 0 products');
+          } else {
+            db = JSON.parse(JSON.stringify(INITIAL_DB));
+            showToast(currentLang === 'mm' ? 'နမူနာ Demo စာရင်း ပြန်တင်ပြီးပါပြီ' : 'Demo data reset');
+          }
+
+          saveDatabase();
+          renderAll();
+        }, currentLang === 'mm' ? 'ဒေတာများ စီမံရှင်းလင်းရန် ဆိုင်ရှင် Password ရိုက်ထည့်ပါ:' : 'Enter Owner PIN to manage database:');
       });
 
       const scannerModal = document.getElementById('scannerModal');
