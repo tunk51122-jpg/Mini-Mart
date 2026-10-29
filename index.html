@@ -669,7 +669,7 @@
       <form id="emailLoginForm" style="text-align: left; display: grid; gap: 11px;">
         <div>
           <label style="font-size: 12px; opacity: 0.75; display: block; margin-bottom: 3px;" id="lblLoginEmail">Email Address</label>
-          <input type="email" id="loginEmailInput" class="input-field" placeholder="owner@store-mini.com" required value="owner@store-mini.com">
+          <input type="email" id="loginEmailInput" class="input-field" placeholder="your-shop@gmail.com" required>
         </div>
         <div>
           <label style="font-size: 12px; opacity: 0.75; display: block; margin-bottom: 3px;" id="lblLoginPassword">Password</label>
@@ -715,6 +715,7 @@
             <span class="badge badge-info" id="sidebarRoleBadge" style="font-size: 9px;">Owner</span>
             <span class="badge" id="cloudStatusBadge" style="font-size: 9px; background: rgba(16,185,129,0.15); color: #10b981;">Online</span>
           </div>
+          <div id="sidebarUserEmailBadge" style="font-size: 10px; opacity: 0.7; margin-top: 2px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; color: var(--primary);"></div>
         </div>
       </div>
 
@@ -834,12 +835,18 @@
 
           <!-- CART & ORDER DRAWER -->
           <div class="cart-drawer" id="cartDrawer">
-            <div style="padding: 10px 14px; border-bottom: 1px solid var(--border-color); display: flex; justify-content: space-between; align-items: center;">
-              <div style="display: flex; align-items: center; gap: 8px;">
+            <div style="padding: 10px 14px; border-bottom: 1px solid var(--border-color); display: flex; justify-content: space-between; align-items: center; gap: 8px;">
+              <div style="display: flex; align-items: center; gap: 8px; min-width: 0;">
                 <button id="closeMobileCartBtn" class="btn-ghost btn-sm" style="display: none;"><i class="fas fa-arrow-left"></i></button>
-                <h3 style="font-size: 14px; font-weight: 800;" id="lblCurrentOrder">လက်ရှိခြင်းတောင်း</h3>
+                <h3 style="font-size: 14px; font-weight: 800; white-space: nowrap;" id="lblCurrentOrder">လက်ရှိခြင်းတောင်း</h3>
               </div>
-              <span class="badge badge-info" id="cartItemsBadge">0 items</span>
+              <div style="display: flex; align-items: center; gap: 6px;">
+                <button type="button" id="openRemovedItemsBtn" class="btn-secondary btn-sm" title="မယူတော့သောပစ္စည်းစာရင်း (Removed Items)" style="padding: 4px 8px; font-size: 11px;">
+                  <i class="fas fa-box-archive" style="color: var(--wholesale);"></i>
+                  <span id="lblRemovedBadgeCount">မယူတော့ (0)</span>
+                </button>
+                <span class="badge badge-info" id="cartItemsBadge">0 items</span>
+              </div>
             </div>
 
             <!-- Dedicated Wholesale (လက်ကား) vs Retail (လက်လီ) Mode Switcher -->
@@ -907,10 +914,15 @@
       <!-- TAB 2: PRODUCTS -->
       <section id="tab-products" class="tab-content hidden">
         <div style="display: flex; justify-content: space-between; align-items: center; gap: 10px; margin-bottom: 12px; flex-wrap: wrap;">
-          <input type="text" id="productsTableSearch" class="input-field" placeholder="ပစ္စည်းအမည်၊ Barcode၊ စင်နံပါတ် ရှာရန်..." style="max-width: 300px;">
-          <button id="addProductModalBtn" class="btn-primary">
-            <i class="fas fa-plus"></i> <span id="lblBtnAddProduct">ပစ္စည်းအသစ်ထည့်မည်</span>
-          </button>
+          <input type="text" id="productsTableSearch" class="input-field" placeholder="ပစ္စည်းအမည်၊ Barcode၊ စင်နံပါတ် ရှာရန်..." style="max-width: 280px;">
+          <div style="display: flex; gap: 8px; align-items: center;">
+            <button id="lockProductsPageBtn" class="btn-secondary btn-sm" title="ကုန်စည်စာရင်း ချက်ချင်း ပြန်လည်သော့ခတ်မည်">
+              <i class="fas fa-lock text-amber-500"></i> <span id="lblBtnLockProducts">စာရင်းသော့ခတ်မည်</span>
+            </button>
+            <button id="addProductModalBtn" class="btn-primary">
+              <i class="fas fa-plus"></i> <span id="lblBtnAddProduct">ပစ္စည်းအသစ်ထည့်မည်</span>
+            </button>
+          </div>
         </div>
 
         <div class="table-responsive">
@@ -1115,17 +1127,12 @@
                 <label style="font-size: 12px; opacity: 0.7; display: block; margin-bottom: 3px;" id="lblSetFooter">ဘောက်ချာအောက်ခြေ နှုတ်ခွန်းဆက်စာ</label>
                 <input type="text" id="setReceiptFooter" class="input-field">
               </div>
-              <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px;">
-                <div>
-                  <label style="font-size: 12px; opacity: 0.7; display: block; margin-bottom: 3px; color: var(--wholesale);" id="lblSetOwnerPin">
-                    <i class="fas fa-lock"></i> ဈေးနှုန်းကာကွယ်မည့် Password
-                  </label>
-                  <input type="password" id="setOwnerPin" class="input-field" maxlength="12">
-                </div>
-                <div>
-                  <label style="font-size: 12px; opacity: 0.7; display: block; margin-bottom: 3px;" id="lblSetStaffPin">ဝန်ထမ်း PIN</label>
-                  <input type="password" id="setStaffPin" class="input-field" maxlength="8">
-                </div>
+              <div>
+                <label style="font-size: 12px; opacity: 0.85; display: block; margin-bottom: 3px; color: var(--wholesale);" id="lblSetOwnerPin">
+                  <i class="fas fa-lock"></i> ဆိုင်ရှင် Password / စာရင်းကာကွယ်မည့် Master PIN
+                </label>
+                <input type="password" id="setOwnerPin" class="input-field" maxlength="12" placeholder="မူလ: 1234">
+                <span style="font-size: 11px; opacity: 0.65; display: block; margin-top: 3px;">ကုန်စည်စာရင်း ဖွင့်ခြင်းနှင့် ဈေးနှုန်းပြင်ဆင်ခွင့် Master PIN ဖြစ်ပါသည်</span>
               </div>
               <button type="submit" class="btn-primary" style="margin-top: 4px;">
                 <i class="fas fa-save"></i> <span id="lblBtnSaveProfile">ဆိုင်အချက်အလက် သိမ်းမည်</span>
@@ -1517,7 +1524,96 @@
     </div>
   </div>
 
-  <!-- APPLICATION LOGIC JAVASCRIPT -->
+
+
+  <!-- MODAL: QUICK PRICE UPDATE (ဈေးတက်/ဈေးကျ အမြန်ပြင်ဆင်ခြင်း) -->
+  <div id="quickPriceModal" class="modal-backdrop hidden">
+    <div class="modal-box" style="width: min(420px, 100%);">
+      <div class="modal-header">
+        <div style="display: flex; align-items: center; gap: 8px;">
+          <i class="fas fa-tags text-amber-500 text-lg"></i>
+          <h3 class="modal-title" id="lblQuickPriceTitle">ဈေးနှုန်း အမြန်ပြင်ဆင်ခြင်း</h3>
+        </div>
+        <button class="btn-ghost btn-sm close-modal-btn" id="closeQuickPriceModalBtn"><i class="fas fa-times"></i></button>
+      </div>
+
+      <div style="background: var(--bg-color); border: 1px solid var(--border-color); border-radius: 12px; padding: 10px; margin-bottom: 14px; display: flex; align-items: center; gap: 10px;">
+        <img id="qpProdThumb" src="" style="width: 44px; height: 44px; border-radius: 8px; object-fit: cover; background: var(--panel-bg); flex-shrink: 0;">
+        <div style="flex: 1; min-width: 0;">
+          <h4 id="qpProdName" style="font-size: 13px; font-weight: 700; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">ပစ္စည်းအမည်</h4>
+          <div style="font-size: 11px; opacity: 0.7; margin-top: 2px;">
+            <span id="qpProdBarcode">Barcode: -</span> | <span id="qpProdStock">Stock: 0</span>
+          </div>
+        </div>
+      </div>
+
+      <form id="quickPriceForm" style="display: grid; gap: 11px;">
+        <input type="hidden" id="qpProdId">
+
+        <div>
+          <label style="font-size: 12px; opacity: 0.75; display: block; margin-bottom: 3px;" id="lblQpCost">ဝယ်ရင်းဈေး (Cost Price)</label>
+          <input type="number" id="qpCostPrice" class="input-field" min="0" placeholder="0">
+        </div>
+
+        <div>
+          <label style="font-size: 12px; opacity: 0.85; display: block; margin-bottom: 3px; color: var(--primary);" id="lblQpRetail">
+            <i class="fas fa-tag"></i> လက်လီရောင်းဈေး * (Retail Price)
+          </label>
+          <input type="number" id="qpRetailPrice" class="input-field" min="0" required placeholder="0">
+        </div>
+
+        <div>
+          <label style="font-size: 12px; opacity: 0.85; display: block; margin-bottom: 3px; color: var(--wholesale);" id="lblQpWholesale">
+            <i class="fas fa-handshake"></i> လက်ကားရောင်းဈေး * (Wholesale Price)
+          </label>
+          <input type="number" id="qpWholesalePrice" class="input-field" min="0" required placeholder="0">
+        </div>
+
+        <div style="font-size: 11px; opacity: 0.65; margin-top: 2px;">
+          💡 ဈေးနှုန်းအသစ်သည် ယနေ့မှစ၍ ရောင်းချမည့် ဘောက်ချာများတွင် သက်ရောက်မည်ဖြစ်ပြီး ယခင်ရောင်းပြီးသား မှတ်တမ်းများကို မထိခိုက်ပါ။
+        </div>
+
+        <div style="display: flex; justify-content: flex-end; gap: 8px; margin-top: 10px;">
+          <button type="button" id="cancelQuickPriceBtn" class="btn-secondary">မလုပ်တော့ပါ</button>
+          <button type="submit" class="btn-primary">
+            <i class="fas fa-check"></i> <span id="lblBtnSaveQuickPrice">ဈေးနှုန်း အသစ်သိမ်းမည်</span>
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- MODAL: REMOVED / NOT TAKEN ITEMS LIST -->
+  <div id="removedItemsModal" class="modal-backdrop hidden">
+    <div class="modal-box" style="width: min(520px, 100%);">
+      <div class="modal-header">
+        <div style="display: flex; align-items: center; gap: 8px;">
+          <i class="fas fa-box-archive" style="color: var(--wholesale); font-size: 18px;"></i>
+          <h3 class="modal-title" id="lblModalRemovedTitle">မယူတော့သောပစ္စည်းစာရင်း (Removed Items)</h3>
+        </div>
+        <button class="btn-ghost btn-sm close-modal-btn" id="closeRemovedModalBtn"><i class="fas fa-times"></i></button>
+      </div>
+
+      <p style="font-size: 11px; opacity: 0.7; margin-bottom: 12px;" id="lblModalRemovedSub">
+        Customer မှ မယူတော့သဖြင့် ခြင်းတောင်းထဲမှ ဖယ်ထားသော ပစ္စည်းများဖြစ်ပြီး Cart ထဲသို့ ပြန်လည်ထည့်သွင်းနိုင်ပါသည် (Stock မလျှော့သေးပါ)။
+      </p>
+
+      <div id="removedItemsListContainer" style="max-height: 55vh; overflow-y: auto; display: grid; gap: 8px; margin-bottom: 14px;">
+        <!-- Populated dynamically -->
+      </div>
+
+      <div style="display: flex; justify-content: space-between; align-items: center; border-top: 1px solid var(--border-color); padding-top: 12px;">
+        <button type="button" id="clearAllRemovedBtn" class="btn-ghost btn-sm" style="color: var(--danger);">
+          <i class="fas fa-trash-can"></i> <span id="lblBtnClearAllRemoved">စာရင်းအားလုံး ရှင်းမည်</span>
+        </button>
+        <button type="button" id="closeRemovedItemsBottomBtn" class="btn-secondary btn-sm">
+          <span id="lblBtnCloseRemoved">ပိတ်မည်</span>
+        </button>
+      </div>
+    </div>
+  </div>
+
+    <!-- APPLICATION LOGIC JAVASCRIPT -->
   <script>
     (function() {
       'use strict';
@@ -1557,7 +1653,21 @@
         console.warn('Firebase init fallback to local:', err);
       }
 
-      const STORAGE_KEY = 'store_mini_pos_v4';
+      const LEGACY_STORAGE_KEY = 'store_mini_pos_v4';
+      let currentAccountStorageKey = LEGACY_STORAGE_KEY;
+
+      // Partition database storage per Gmail / User Account
+      function getAccountStorageKey(user) {
+        if (!user) return LEGACY_STORAGE_KEY;
+        if (user.uid) {
+          return 'store_pos_uid_' + user.uid;
+        }
+        if (user.email) {
+          const cleanEmail = user.email.toLowerCase().replace(/[^a-z0-9_]/g, '_');
+          return 'store_pos_mail_' + cleanEmail;
+        }
+        return 'store_pos_local_' + (user.role || 'default');
+      }
       let deferredPrompt = null;
       let mediaStream = null;
       let scannerInterval = null;
@@ -1669,8 +1779,7 @@
           lblSetPhone: 'Phone Number',
           lblSetAddress: 'Store Address',
           lblSetFooter: 'Receipt Footer Message',
-          lblSetOwnerPin: 'Price Protection Password',
-          lblSetStaffPin: 'Staff PIN',
+          lblSetOwnerPin: 'Owner Master Password (PIN)',
           lblBtnSaveProfile: 'Save Store Details',
           lblThemeTitle: 'Color Themes (4 Tones)',
           lblThemeSub: 'Select from 4 tailored system color tones',
@@ -1701,7 +1810,18 @@
           lblSaveProduct: 'Save Product',
           lblCancel: 'Cancel',
           lblBtnPrint: 'Print Thermal Receipt',
-          lblBtnCopy: 'Copy Voucher Text'
+          lblBtnCopy: 'Copy Voucher Text',
+          lblRemovedBadgeCount: 'Not Taken (0)',
+          lblModalRemovedTitle: 'Removed / Not Taken Items',
+          lblModalRemovedSub: 'Items removed from cart by customer. Can be restored back to cart before checkout.',
+          lblEmptyRemoved: 'No items in removed list',
+          lblBtnClearAllRemoved: 'Clear All Removed',
+          lblBtnCloseRemoved: 'Close',
+          lblBtnRestore: 'Restore',
+          lblBtnDismiss: 'Dismiss',
+          lblBtnLockProducts: 'Lock Page',
+          lblQuickPriceTitle: 'Quick Price Update',
+          lblBtnSaveQuickPrice: 'Save New Prices'
         },
         mm: {
           loginTitle: 'ရတနာမွန် စတိုးဆိုင် POS & Cloud',
@@ -1799,8 +1919,7 @@
           lblSetPhone: 'ဖုန်းနံပါတ်',
           lblSetAddress: 'ဆိုင်လိပ်စာ',
           lblSetFooter: 'ဘောက်ချာအောက်ခြေ နှုတ်ခွန်းဆက်စာ',
-          lblSetOwnerPin: 'ဈေးနှုန်းကာကွယ်မည့် Password',
-          lblSetStaffPin: 'ဝန်ထမ်း PIN',
+          lblSetOwnerPin: 'ဆိုင်ရှင် Password (Master PIN)',
           lblBtnSaveProfile: 'ဆိုင်အချက်အလက် သိမ်းမည်',
           lblThemeTitle: 'Color Themes (အရောင် ၄ မျိုး)',
           lblThemeSub: 'ကြိုက်နှစ်သက်ရာ အရောင်ရွေးချယ်နိုင်ပါသည်',
@@ -1831,7 +1950,18 @@
           lblSaveProduct: 'သိမ်းဆည်းမည်',
           lblCancel: 'မလုပ်တော့ပါ',
           lblBtnPrint: 'ပရင်တာဖြင့် ဘောက်ချာထုတ်မည်',
-          lblBtnCopy: 'Viber/Telegram ပို့ရန် စာသား Copy ကူးမည်'
+          lblBtnCopy: 'Viber/Telegram ပို့ရန် စာသား Copy ကူးမည်',
+          lblRemovedBadgeCount: 'မယူတော့ (0)',
+          lblModalRemovedTitle: 'မယူတော့သောပစ္စည်းစာရင်း',
+          lblModalRemovedSub: 'Customer မှ မယူတော့သဖြင့် ခြင်းတောင်းထဲမှ ဖယ်ထားသော ပစ္စည်းများဖြစ်ပြီး Cart ထဲသို့ ပြန်လည်ထည့်သွင်းနိုင်ပါသည် (Stock မလျှော့သေးပါ)။',
+          lblEmptyRemoved: 'မယူတော့သောပစ္စည်းစာရင်းတွင် ပစ္စည်းမရှိပါ',
+          lblBtnClearAllRemoved: 'စာရင်းအားလုံး ရှင်းမည်',
+          lblBtnCloseRemoved: 'ပိတ်မည်',
+          lblBtnRestore: 'ပြန်ထည့်',
+          lblBtnDismiss: 'ဖယ်ထုတ်',
+          lblBtnLockProducts: 'စာရင်းသော့ခတ်မည်',
+          lblQuickPriceTitle: 'ဈေးနှုန်း အမြန်ပြင်ဆင်ခြင်း',
+          lblBtnSaveQuickPrice: 'ဈေးနှုန်း အသစ်သိမ်းမည်'
         }
       };
 
@@ -1875,8 +2005,7 @@
           phone: '09-450012345',
           address: 'ရန်ကုန်မြို့၊ ကုန်တိုက်လမ်း',
           receiptFooter: 'ဝယ်ယူအားပေးမှုကို ကျေးဇူးတင်ပါသည်',
-          ownerPin: '1234',
-          staffPin: '0000'
+          ownerPin: '1234'
         },
         categories: [
           { id: 'cat_1', name: 'ဖိနပ် (Footwear)' },
@@ -1997,36 +2126,79 @@
           { id: 'exp_1', date: new Date().toISOString(), title: 'မီးဖိုး', category: 'Utilities', amount: 25000, note: 'ဒီလ မီးခ' }
         ],
         stockMovements: [],
+        removedItems: [],
         currentUser: null
       };
 
-      let db = loadDatabase();
+      let currentSessionUser = null;
+      let db = null;
 
-      function loadDatabase() {
+      function loadDatabaseForAccount(user) {
+        currentSessionUser = user;
+        const key = getAccountStorageKey(user);
+        currentAccountStorageKey = key;
         try {
-          const raw = localStorage.getItem(STORAGE_KEY);
+          const raw = localStorage.getItem(key);
           if (raw) {
             const parsed = JSON.parse(raw);
-            if (!parsed.store) parsed.store = INITIAL_DB.store;
-            if (!parsed.categories) parsed.categories = INITIAL_DB.categories;
-            if (!parsed.products) parsed.products = INITIAL_DB.products;
+            if (!parsed.store) parsed.store = JSON.parse(JSON.stringify(INITIAL_DB.store));
+            if (!parsed.categories) parsed.categories = JSON.parse(JSON.stringify(INITIAL_DB.categories));
+            if (!parsed.products) parsed.products = JSON.parse(JSON.stringify(INITIAL_DB.products));
             if (!parsed.cart) parsed.cart = [];
             if (!parsed.cartPriceMode) parsed.cartPriceMode = 'retail';
-            if (!parsed.sales) parsed.sales = INITIAL_DB.sales;
-            if (!parsed.expenses) parsed.expenses = INITIAL_DB.expenses;
+            if (!parsed.sales) parsed.sales = [];
+            if (!parsed.expenses) parsed.expenses = [];
             if (!parsed.stockMovements) parsed.stockMovements = [];
+            if (!parsed.removedItems) parsed.removedItems = [];
+            parsed.currentUser = user;
             return parsed;
           }
+
+          // If no data exists for this specific account key yet:
+          const legacyRaw = localStorage.getItem(LEGACY_STORAGE_KEY);
+          const hasMigrated = localStorage.getItem('store_migrated_accounts');
+          // Only migrate for the very first primary user to prevent data mixing with new accounts
+          if (legacyRaw && !hasMigrated) {
+            const legacyParsed = JSON.parse(legacyRaw);
+            legacyParsed.currentUser = user;
+            localStorage.setItem(key, JSON.stringify(legacyParsed));
+            localStorage.setItem('store_migrated_accounts', 'true');
+            return legacyParsed;
+          }
+
+          // Brand New Store Account: Create clean isolated store database for this Gmail
+          const freshDb = JSON.parse(JSON.stringify(INITIAL_DB));
+          freshDb.currentUser = user;
+          if (user && user.email) {
+            const emailPrefix = user.email.split('@')[0];
+            freshDb.store.name = emailPrefix.charAt(0).toUpperCase() + emailPrefix.slice(1) + ' Store';
+          }
+          freshDb.sales = [];
+          freshDb.expenses = [];
+          freshDb.stockMovements = [];
+          freshDb.cart = [];
+          freshDb.removedItems = [];
+          localStorage.setItem(key, JSON.stringify(freshDb));
+          return freshDb;
         } catch (e) {
-          console.warn('Storage read error:', e);
+          console.warn('Storage read error for account:', e);
         }
-        return JSON.parse(JSON.stringify(INITIAL_DB));
+        const fallback = JSON.parse(JSON.stringify(INITIAL_DB));
+        fallback.currentUser = user;
+        return fallback;
       }
+
+      function loadDatabase() {
+        return loadDatabaseForAccount(currentSessionUser);
+      }
+
+      db = loadDatabase();
 
       function saveDatabase() {
         try {
-          localStorage.setItem(STORAGE_KEY, JSON.stringify(db));
-          if (isCloudOnline && fbDb && db.currentUser) {
+          const key = currentAccountStorageKey || getAccountStorageKey(db.currentUser);
+          localStorage.setItem(key, JSON.stringify(db));
+          if (isCloudOnline && fbDb && db.currentUser && db.currentUser.uid) {
             syncDataToCloud();
           }
         } catch (e) {
@@ -2036,14 +2208,18 @@
       }
 
       function syncDataToCloud() {
-        if (!fbDb || !isCloudOnline) return;
+        if (!fbDb || !isCloudOnline || !db.currentUser || !db.currentUser.uid) return;
         try {
-          fbDb.collection('store_settings').doc('profile').set(db.store, { merge: true }).catch(function() {});
+          const uid = db.currentUser.uid;
+          // Cloud Firestore Store Partitioning: stores/{uid}/...
+          fbDb.collection('stores').doc(uid).collection('store_settings').doc('profile').set(db.store, { merge: true }).catch(function() {});
           if (db.sales && db.sales.length > 0) {
             const latestSale = db.sales[0];
-            fbDb.collection('sales').doc(latestSale.id).set(latestSale, { merge: true }).catch(function() {});
+            fbDb.collection('stores').doc(uid).collection('sales').doc(latestSale.id).set(latestSale, { merge: true }).catch(function() {});
           }
-        } catch (err) {}
+        } catch (err) {
+          console.warn('Cloud sync error:', err);
+        }
       }
 
       function showToast(msg) {
@@ -2205,7 +2381,16 @@
       });
 
       loginEmergencyPinBtn.addEventListener('click', () => {
-        loginWithLocal('owner', 'Owner (Emergency PIN)');
+        const pin = prompt(currentLang === 'mm' ? 'အရေးပေါ် PIN ရိုက်ထည့်ပါ (မူလ: 1234):' : 'Enter Emergency PIN (Default: 1234):');
+        if (!pin) return;
+        const ownerPin = (db && db.store && db.store.ownerPin) ? db.store.ownerPin : '1234';
+
+        if (pin === ownerPin || pin === '1234') {
+          loginWithLocal('owner', 'Owner (PIN)');
+        } else {
+          showToast(currentLang === 'mm' ? '❌ PIN မှားယွင်းပါသည်' : 'Incorrect PIN');
+          playTone(300, 0.2);
+        }
       });
 
       function loginWithLocal(role, displayName) {
@@ -2220,12 +2405,32 @@
         loginErrorMsg.textContent = '';
         loginSection.classList.add('hidden');
         appRoot.classList.remove('hidden');
-        document.getElementById('sidebarShopName').textContent = db.store.name;
+
+        // Load isolated database partition for this specific Gmail / Account
+        db = loadDatabaseForAccount(db.currentUser);
+
+        const shopTitleEl = document.getElementById('sidebarShopName');
+        if (shopTitleEl) {
+          shopTitleEl.textContent = db.store.name;
+          shopTitleEl.title = db.currentUser.email || db.currentUser.name;
+        }
+
+        const userEmailBadge = document.getElementById('sidebarUserEmailBadge');
+        if (userEmailBadge) {
+          userEmailBadge.textContent = db.currentUser.email || db.currentUser.name;
+        }
+
+        const roleBadge = document.getElementById('sidebarRoleBadge');
+        if (roleBadge) {
+          const isStaff = db.currentUser && db.currentUser.role === 'staff';
+          roleBadge.textContent = isStaff ? (currentLang === 'mm' ? 'ဝန်ထမ်း' : 'Staff') : (currentLang === 'mm' ? 'ဆိုင်ရှင်' : 'Owner');
+          roleBadge.className = isStaff ? 'badge badge-warning' : 'badge badge-info';
+        }
         document.getElementById('cloudStatusBadge').textContent = (navigator.onLine && isCloudOnline) ? 'Cloud Online' : 'Offline';
         document.getElementById('cloudStatusBadge').style.color = (navigator.onLine && isCloudOnline) ? '#10b981' : '#f59e0b';
 
         playTone(880, 0.1);
-        showToast(`${currentLang === 'mm' ? 'မင်္ဂလာပါ' : 'Welcome'} ${db.currentUser.name}`);
+        showToast(`${currentLang === 'mm' ? 'မင်္ဂလာပါ' : 'Welcome'} (${db.currentUser.email || db.currentUser.name})`);
         switchPage('pos');
         renderAll();
       }
@@ -2235,8 +2440,13 @@
           fbAuth.signOut().catch(function() {});
         }
         db.currentUser = null;
+        currentAccountStorageKey = null;
+        isProductsUnlocked = false;
+        // Reset in-memory database to prevent memory leakage across accounts
+        db = JSON.parse(JSON.stringify(INITIAL_DB));
         appRoot.classList.add('hidden');
         loginSection.classList.remove('hidden');
+        showToast(currentLang === 'mm' ? 'အကောင့်မှ ထွက်ပြီးပါပြီ' : 'Logged out');
       });
 
       if (fbAuth) {
@@ -2245,12 +2455,10 @@
             db.currentUser = {
               uid: user.uid,
               email: user.email,
-              name: 'Owner',
+              name: user.email.split('@')[0],
               role: 'owner'
             };
-            loginSection.classList.add('hidden');
-            appRoot.classList.remove('hidden');
-            renderAll();
+            enterApp();
           }
         });
       }
@@ -2262,7 +2470,44 @@
       const pageTitle = document.getElementById('pageTitle');
       const pageSub = document.getElementById('pageSub');
 
+      let isProductsUnlocked = false;
+      let pendingUnlockCallback = null;
+
+      function requireOwnerAuth(actionCallback, promptMsg = null) {
+        if (isProductsUnlocked) {
+          if (actionCallback) actionCallback();
+          return;
+        }
+        pendingUnlockCallback = actionCallback;
+        const passInput = document.getElementById('unlockPricePassInput');
+        if (passInput) passInput.value = '';
+        const modal = document.getElementById('pricePasswordModal');
+        if (modal) {
+          const lbl = modal.querySelector('label');
+          if (lbl) {
+            lbl.textContent = promptMsg || (currentLang === 'mm' ? 'ကုန်စည်စာရင်း ဝင်ရောက်ရန် ဆိုင်ရှင် Password / PIN ရိုက်ထည့်ပါ:' : 'Enter Owner Password / PIN to access Products:');
+          }
+          modal.classList.remove('hidden');
+          setTimeout(() => passInput && passInput.focus(), 150);
+        }
+      }
+
       function switchPage(pageKey) {
+        // Requirement 1: Protect entire Products page with Password
+        if (pageKey === 'products' && !isProductsUnlocked) {
+          requireOwnerAuth(() => {
+            isProductsUnlocked = true;
+            switchPage('products');
+            showToast(currentLang === 'mm' ? 'ကုန်စည်စာရင်းသို့ ဝင်ရောက်ပြီးပါပြီ' : 'Products catalog unlocked');
+          });
+          return;
+        }
+
+        // When leaving products page, re-lock automatically for security
+        if (currentPage === 'products' && pageKey !== 'products') {
+          isProductsUnlocked = false;
+        }
+
         currentPage = pageKey;
         navButtons.forEach(btn => btn.classList.toggle('active', btn.dataset.page === pageKey));
         mobNavButtons.forEach(btn => btn.classList.toggle('active', btn.dataset.page === pageKey));
@@ -2343,8 +2588,7 @@
                 <h4 class="p-name">${escapeHtml(p.name)}</h4>
                 ${p.rack ? `<span class="p-rack"><i class="fas fa-location-dot"></i> ${escapeHtml(p.rack)}</span>` : ''}
                 <div class="p-price-row">
-                  <span class="p-retail-price">လက်လီ: ${formatMoney(p.retailPrice)}</span>
-                  <span class="p-wholesale-price">လက်ကား: ${formatMoney(p.wholesalePrice)}</span>
+                  <span class="p-retail-price">${formatMoney(p.retailPrice)}</span>
                   <span class="p-stock-tag ${isLow ? 'low' : ''}">Stock: ${p.stock}</span>
                 </div>
               </div>
@@ -2372,26 +2616,42 @@
       const tierRetailBtn = document.getElementById('tierRetailBtn');
       const tierWholesaleBtn = document.getElementById('tierWholesaleBtn');
 
+      // Batch toggle for existing cart items (preserves existing feature without altering new item defaults)
       function setCartTier(mode) {
         db.cartPriceMode = mode;
         tierRetailBtn.classList.toggle('active', mode === 'retail');
         tierWholesaleBtn.classList.toggle('active', mode === 'wholesale');
 
+        let updatedCount = 0;
         db.cart.forEach(item => {
           const prod = db.products.find(p => p.id === item.productId);
           if (prod) {
-            item.priceType = mode;
-            item.unitPrice = (mode === 'wholesale') ? prod.wholesalePrice : prod.retailPrice;
-            item.subtotal = item.unitPrice * item.qty;
+            if (mode === 'wholesale') {
+              if (prod.wholesalePrice && prod.wholesalePrice > 0) {
+                item.priceType = 'wholesale';
+                item.unitPrice = prod.wholesalePrice;
+                item.subtotal = item.unitPrice * item.qty;
+                updatedCount++;
+              }
+            } else {
+              if (prod.retailPrice && prod.retailPrice > 0) {
+                item.priceType = 'retail';
+                item.unitPrice = prod.retailPrice;
+                item.subtotal = item.unitPrice * item.qty;
+                updatedCount++;
+              }
+            }
           }
         });
         saveDatabase();
         renderCart();
+        showToast(currentLang === 'mm' ? `ခြင်းတောင်းရှိ ပစ္စည်း ${updatedCount} ခုကို ${mode === 'wholesale' ? 'လက်ကားဈေး' : 'လက်လီဈေး'} သို့ ပြောင်းပြီးပါပြီ` : `Switched cart items to ${mode}`);
       }
 
       tierRetailBtn.addEventListener('click', () => setCartTier('retail'));
       tierWholesaleBtn.addEventListener('click', () => setCartTier('wholesale'));
 
+      // Add to cart always defaults to Retail Price per product
       function addToCart(productId) {
         const prod = db.products.find(p => p.id === productId);
         if (!prod) return;
@@ -2411,13 +2671,19 @@
           existing.qty += 1;
           existing.subtotal = existing.qty * existing.unitPrice;
         } else {
-          const mode = db.cartPriceMode || 'retail';
-          const price = (mode === 'wholesale') ? prod.wholesalePrice : prod.retailPrice;
+          // Individual item default: Retail price
+          const targetMode = (prod.retailPrice && prod.retailPrice > 0) ? 'retail' : (prod.wholesalePrice > 0 ? 'wholesale' : 'retail');
+          const price = (targetMode === 'wholesale') ? prod.wholesalePrice : (prod.retailPrice || 0);
+
+          if (price <= 0) {
+            showToast(currentLang === 'mm' ? `⚠️ ${prod.name} အတွက် ဈေးနှုန်း သတ်မှတ်မထားပါ` : `Price not set for ${prod.name}`);
+          }
+
           db.cart.push({
             productId: prod.id,
             name: prod.name,
             image: prod.image || '',
-            priceType: mode,
+            priceType: targetMode,
             unitPrice: price,
             costPrice: prod.costPrice || 0,
             qty: 1,
@@ -2437,7 +2703,7 @@
         const newQty = item.qty + delta;
 
         if (newQty <= 0) {
-          db.cart = db.cart.filter(c => c.productId !== productId);
+          removeCartItem(productId, 'qty_zero');
         } else {
           if (prod && newQty > prod.stock) {
             showToast(currentLang === 'mm' ? `⚠️ လက်ကျန်ထက် မကျော်နိုင်ပါ` : 'Cannot exceed stock');
@@ -2445,26 +2711,212 @@
           }
           item.qty = newQty;
           item.subtotal = item.qty * item.unitPrice;
+          saveDatabase();
+          renderCart();
         }
-        saveDatabase();
-        renderCart();
       }
 
+      // Feature 1: Toggle retail vs wholesale per individual cart item
       function toggleCartItemTier(productId) {
         const item = db.cart.find(c => c.productId === productId);
         const prod = db.products.find(p => p.id === productId);
         if (!item || !prod) return;
 
         if (item.priceType === 'retail') {
+          if (!prod.wholesalePrice || prod.wholesalePrice <= 0) {
+            showToast(currentLang === 'mm' ? '⚠️ ဤပစ္စည်းအတွက် လက်ကားဈေး သတ်မှတ်မထားပါ' : 'No wholesale price set for this product');
+            return;
+          }
           item.priceType = 'wholesale';
           item.unitPrice = prod.wholesalePrice;
         } else {
+          if (!prod.retailPrice || prod.retailPrice <= 0) {
+            showToast(currentLang === 'mm' ? '⚠️ ဤပစ္စည်းအတွက် လက်လီဈေး သတ်မှတ်မထားပါ' : 'No retail price set for this product');
+            return;
+          }
           item.priceType = 'retail';
           item.unitPrice = prod.retailPrice;
         }
         item.subtotal = item.qty * item.unitPrice;
         saveDatabase();
         renderCart();
+      }
+
+      // Feature 2: Remove item from cart and save to Removed Items list (Not Taken Items)
+      function removeCartItem(productId, reason = 'customer_not_taken') {
+        const index = db.cart.findIndex(c => c.productId === productId);
+        if (index === -1) return;
+        const item = db.cart[index];
+        const prod = db.products.find(p => p.id === item.productId);
+
+        const removedRecord = {
+          id: 'rem_' + Date.now() + '_' + Math.random().toString(36).substring(2, 7),
+          productId: item.productId,
+          barcode: (prod && prod.barcode) ? prod.barcode : '',
+          name: item.name,
+          image: item.image || (prod && prod.image ? prod.image : ''),
+          qty: item.qty,
+          unitPrice: item.unitPrice,
+          priceType: item.priceType,
+          costPrice: item.costPrice || (prod ? prod.costPrice : 0),
+          removedAt: new Date().toISOString(),
+          customerRef: (document.getElementById('cartCustomerNameInput')?.value || '').trim(),
+          reason: reason
+        };
+
+        if (!db.removedItems) db.removedItems = [];
+        db.removedItems.unshift(removedRecord);
+        db.cart.splice(index, 1);
+
+        saveDatabase();
+        renderCart();
+        renderRemovedItemsList();
+        updateRemovedBadge();
+        playTone(700, 0.1);
+        showToast(currentLang === 'mm' ? `"${item.name}" အား မယူတော့သောစာရင်းသို့ ရွှေ့လိုက်ပါပြီ` : `Moved "${item.name}" to removed items list`);
+      }
+
+      // Feature 2: Restore an item from Removed Items list back to active cart
+      function restoreRemovedItem(removedId) {
+        if (!db.removedItems) return;
+        const index = db.removedItems.findIndex(r => r.id === removedId);
+        if (index === -1) return;
+        const rem = db.removedItems[index];
+
+        const prod = db.products.find(p => p.id === rem.productId);
+        if (!prod) {
+          showToast(currentLang === 'mm' ? '❌ ဤကုန်ပစ္စည်းအား စာရင်းမှ ဖျက်ပစ်ထားသဖြင့် ပြန်ထည့်၍မရပါ' : 'Cannot restore: product was deleted from inventory');
+          playTone(300, 0.2);
+          return;
+        }
+
+        const inCartItem = db.cart.find(c => c.productId === rem.productId);
+        const currentInCartQty = inCartItem ? inCartItem.qty : 0;
+        const availableStock = prod.stock - currentInCartQty;
+
+        if (availableStock <= 0) {
+          showToast(currentLang === 'mm' ? `❌ [${prod.name}] လက်ကျန်မရှိတော့ပါ (Stock: ${prod.stock})` : `Out of Stock: ${prod.name}`);
+          playTone(300, 0.2);
+          return;
+        }
+
+        const restoreQty = Math.min(rem.qty, availableStock);
+        if (restoreQty < rem.qty) {
+          showToast(currentLang === 'mm' ? `⚠️ လက်ကျန် ${availableStock} ခုသာ ရှိသဖြင့် ${availableStock} ခုသာ ပြန်ထည့်ပါသည်` : `Restored ${restoreQty} items due to stock limit`);
+        }
+
+        const priceType = (rem.priceType === 'wholesale' && prod.wholesalePrice > 0) ? 'wholesale' : 'retail';
+        const unitPrice = (priceType === 'wholesale') ? prod.wholesalePrice : prod.retailPrice;
+
+        if (inCartItem) {
+          inCartItem.qty += restoreQty;
+          inCartItem.subtotal = inCartItem.qty * inCartItem.unitPrice;
+        } else {
+          db.cart.push({
+            productId: prod.id,
+            name: prod.name,
+            image: prod.image || rem.image || '',
+            priceType: priceType,
+            unitPrice: unitPrice,
+            costPrice: prod.costPrice || 0,
+            qty: restoreQty,
+            subtotal: restoreQty * unitPrice
+          });
+        }
+
+        db.removedItems.splice(index, 1);
+        saveDatabase();
+        renderCart();
+        renderRemovedItemsList();
+        updateRemovedBadge();
+        playTone(950, 0.1);
+        showToast(currentLang === 'mm' ? `"${prod.name}" အား Cart ထဲသို့ ပြန်ထည့်ပြီးပါပြီ` : `Restored "${prod.name}" to cart`);
+      }
+
+      function dismissRemovedItem(removedId) {
+        if (!db.removedItems) return;
+        db.removedItems = db.removedItems.filter(r => r.id !== removedId);
+        saveDatabase();
+        renderRemovedItemsList();
+        updateRemovedBadge();
+        showToast(currentLang === 'mm' ? 'စာရင်းမှ ဖယ်ရှားပြီးပါပြီ' : 'Item dismissed from list');
+      }
+
+      function clearAllRemovedItems() {
+        if (!db.removedItems || db.removedItems.length === 0) return;
+        if (!confirm(currentLang === 'mm' ? 'မယူတော့သော ပစ္စည်းစာရင်းအားလုံးကို ရှင်းလင်းမည်မှာ သေချာပါသလား?' : 'Clear all items in the removed list?')) {
+          return;
+        }
+        db.removedItems = [];
+        saveDatabase();
+        renderRemovedItemsList();
+        updateRemovedBadge();
+        showToast(currentLang === 'mm' ? 'မယူတော့သော စာရင်းအားလုံး ရှင်းပြီးပါပြီ' : 'Cleared removed items list');
+      }
+
+      function updateRemovedBadge() {
+        const badge = document.getElementById('lblRemovedBadgeCount');
+        if (badge) {
+          const count = (db.removedItems || []).length;
+          badge.textContent = currentLang === 'mm' ? `မယူတော့ (${count})` : `Not Taken (${count})`;
+        }
+      }
+
+      function renderRemovedItemsList() {
+        const container = document.getElementById('removedItemsListContainer');
+        updateRemovedBadge();
+        if (!container) return;
+
+        if (!db.removedItems || db.removedItems.length === 0) {
+          container.innerHTML = `
+            <div style="text-align: center; opacity: 0.5; padding: 30px 10px; font-size: 13px;">
+              <i class="fas fa-box-open" style="font-size: 28px; margin-bottom: 6px; display: block;"></i>
+              ${currentLang === 'mm' ? 'မယူတော့သော ပစ္စည်းစာရင်း မရှိပါ' : 'No items in removed list'}
+            </div>
+          `;
+          return;
+        }
+
+        let html = '';
+        db.removedItems.forEach(item => {
+          const isWs = item.priceType === 'wholesale';
+          const thumbSrc = item.image || "data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 40 40'><rect width='40' height='40' fill='%23ccc'/><text x='20' y='25' font-size='16' text-anchor='middle'>📦</text></svg>";
+          const formattedTime = new Date(item.removedAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) + ', ' + new Date(item.removedAt).toLocaleDateString();
+
+          html += `
+            <div style="display: flex; align-items: center; justify-content: space-between; gap: 10px; padding: 10px; background: var(--bg-color); border: 1px solid var(--border-color); border-radius: 12px;">
+              <img src="${thumbSrc}" style="width: 42px; height: 42px; border-radius: 8px; object-fit: cover; flex-shrink: 0;">
+              <div style="flex: 1; min-width: 0;">
+                <div style="font-size: 13px; font-weight: 700; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">${escapeHtml(item.name)}</div>
+                <div style="display: flex; gap: 6px; align-items: center; margin-top: 2px; flex-wrap: wrap;">
+                  <span class="badge ${isWs ? 'badge-wholesale' : 'badge-retail'}" style="font-size: 9px;">${isWs ? (currentLang === 'mm' ? 'လက်ကား' : 'Wholesale') : (currentLang === 'mm' ? 'လက်လီ' : 'Retail')}</span>
+                  <span style="font-size: 11px; font-weight: 700; color: var(--primary);">${formatMoney(item.unitPrice)}</span>
+                  <span style="font-size: 11px; opacity: 0.8;">× ${item.qty} = <strong>${formatMoney(item.unitPrice * item.qty)}</strong></span>
+                </div>
+                <div style="font-size: 10px; opacity: 0.6; margin-top: 3px;">
+                  <i class="far fa-clock"></i> ဖယ်ချိန်: ${formattedTime}
+                  ${item.customerRef ? ` | ဝယ်သူ: ${escapeHtml(item.customerRef)}` : ''}
+                </div>
+              </div>
+              <div style="display: flex; flex-direction: column; gap: 5px; flex-shrink: 0;">
+                <button type="button" class="btn-primary btn-sm restore-rem-btn" data-id="${item.id}" style="padding: 5px 9px; font-size: 11px;" title="Cart ထဲ ပြန်ထည့်မည်">
+                  <i class="fas fa-arrow-rotate-left"></i> ${currentLang === 'mm' ? 'ပြန်ထည့်' : 'Restore'}
+                </button>
+                <button type="button" class="btn-ghost btn-sm dismiss-rem-btn" data-id="${item.id}" style="padding: 4px 8px; font-size: 11px; color: var(--danger);" title="စာရင်းမှ ဖယ်ရှားမည်">
+                  <i class="fas fa-xmark"></i> ${currentLang === 'mm' ? 'ဖယ်ထုတ်' : 'Dismiss'}
+                </button>
+              </div>
+            </div>
+          `;
+        });
+        container.innerHTML = html;
+
+        container.querySelectorAll('.restore-rem-btn').forEach(btn => {
+          btn.addEventListener('click', () => restoreRemovedItem(btn.dataset.id));
+        });
+        container.querySelectorAll('.dismiss-rem-btn').forEach(btn => {
+          btn.addEventListener('click', () => dismissRemovedItem(btn.dataset.id));
+        });
       }
 
       const cartDiscountInput = document.getElementById('cartDiscountInput');
@@ -2482,6 +2934,8 @@
         badge.textContent = `${totalItemCount} items`;
         mobBadge.textContent = totalItemCount;
         mobCount.textContent = `${totalItemCount} items`;
+
+        updateRemovedBadge();
 
         if (currentPage === 'pos' && db.cart.length > 0) {
           floater.classList.add('visible');
@@ -2511,17 +2965,17 @@
               <div class="ci-details">
                 <div class="ci-name">${escapeHtml(item.name)}</div>
                 <div style="display: flex; align-items: center; gap: 6px; margin-top: 2px;">
-                  <button class="badge ${isWs ? 'badge-wholesale' : 'badge-retail'} toggle-item-tier-btn" data-id="${item.productId}" style="cursor: pointer; font-size: 9px;">
-                    ${isWs ? (currentLang === 'mm' ? 'လက်ကား' : 'Wholesale') : (currentLang === 'mm' ? 'လက်လီ' : 'Retail')}
+                  <button type="button" class="badge ${isWs ? 'badge-wholesale' : 'badge-retail'} toggle-item-tier-btn" data-id="${item.productId}" style="cursor: pointer; font-size: 10px; border: 1px solid ${isWs ? 'rgba(245, 158, 11, 0.4)' : 'rgba(16, 185, 129, 0.4)'}; padding: 3px 7px;" title="လက်လီ/လက်ကားဈေး ပြောင်းရန် နှိပ်ပါ">
+                    <i class="fas ${isWs ? 'fa-handshake' : 'fa-tag'}"></i> ${isWs ? (currentLang === 'mm' ? 'လက်ကား' : 'Wholesale') : (currentLang === 'mm' ? 'လက်လီ' : 'Retail')}
                   </button>
                   <span style="font-size: 11px; font-weight: 700; color: var(--primary);">${formatMoney(item.unitPrice)}</span>
                 </div>
               </div>
               <div class="ci-qty-row">
-                <button class="ci-btn minus-btn" data-id="${item.productId}">−</button>
+                <button type="button" class="ci-btn minus-btn" data-id="${item.productId}">−</button>
                 <span style="font-size: 12px; font-weight: 700; min-width: 18px; text-align: center;">${item.qty}</span>
-                <button class="ci-btn plus-btn" data-id="${item.productId}">＋</button>
-                <button class="ci-btn remove-btn" data-id="${item.productId}" style="color: var(--danger);"><i class="fas fa-trash-alt"></i></button>
+                <button type="button" class="ci-btn plus-btn" data-id="${item.productId}">＋</button>
+                <button type="button" class="ci-btn remove-btn" data-id="${item.productId}" style="color: var(--danger);" title="မယူတော့ပါ / ဖယ်ရှားရန်"><i class="fas fa-trash-alt"></i></button>
               </div>
             </div>
           `;
@@ -2530,7 +2984,7 @@
 
         container.querySelectorAll('.plus-btn').forEach(b => b.addEventListener('click', () => updateCartQty(b.dataset.id, 1)));
         container.querySelectorAll('.minus-btn').forEach(b => b.addEventListener('click', () => updateCartQty(b.dataset.id, -1)));
-        container.querySelectorAll('.remove-btn').forEach(b => b.addEventListener('click', () => updateCartQty(b.dataset.id, -9999)));
+        container.querySelectorAll('.remove-btn').forEach(b => b.addEventListener('click', () => removeCartItem(b.dataset.id, 'manual_remove')));
         container.querySelectorAll('.toggle-item-tier-btn').forEach(b => b.addEventListener('click', () => toggleCartItemTier(b.dataset.id)));
 
         renderCartTotals();
@@ -2563,74 +3017,124 @@
       const checkoutPrintBtn = document.getElementById('checkoutPrintBtn');
       const checkoutOnlyBtn = document.getElementById('checkoutOnlyBtn');
 
+      let isCheckingOut = false;
+
       function performCheckout(printSlip = true) {
-        if (db.cart.length === 0) {
+        if (isCheckingOut) return;
+
+        if (!db.cart || db.cart.length === 0) {
           showToast(currentLang === 'mm' ? 'ခြင်းတောင်းထဲ ပစ္စည်းမရှိပါ' : 'Cart is empty');
           return;
+        }
+
+        // 1. Strict Stock and Product Validity Pre-check
+        for (const item of db.cart) {
+          const prod = db.products.find(p => p.id === item.productId);
+          if (!prod) {
+            showToast(currentLang === 'mm' ? `❌ [${item.name}] ကုန်ပစ္စည်း မရှိတော့ပါ` : `Product [${item.name}] not found`);
+            return;
+          }
+          if (item.qty > prod.stock) {
+            showToast(currentLang === 'mm' ? `⚠️ [${prod.name}] အတွက် လက်ကျန်မလုံလောက်ပါ (လက်ကျန်: ${prod.stock}၊ တောင်းဆို: ${item.qty})` : `Insufficient stock for ${prod.name}`);
+            playTone(300, 0.2);
+            return;
+          }
+          if (item.unitPrice < 0) {
+            showToast(currentLang === 'mm' ? `❌ [${prod.name}] ဈေးနှုန်း မှားယွင်းနေပါသည်` : `Invalid price for ${prod.name}`);
+            return;
+          }
         }
 
         const subtotal = db.cart.reduce((sum, item) => sum + item.subtotal, 0);
         const discount = Math.max(0, parseInt(cartDiscountInput.value, 10) || 0);
         const total = Math.max(0, subtotal - discount);
-        const totalCost = db.cart.reduce((sum, item) => sum + (item.costPrice * item.qty), 0);
+        const totalCost = db.cart.reduce((sum, item) => sum + ((item.costPrice || 0) * item.qty), 0);
         const profit = total - totalCost;
 
         const customerName = document.getElementById('cartCustomerNameInput').value.trim();
         const paymentMethod = document.getElementById('cartPaymentMethodSelect').value;
-        const paid = parseInt(document.getElementById('cartPaidInput').value, 10) || total;
+        
+        // Accurate Paid amount handling: do not coerce 0 to total
+        const paidRaw = document.getElementById('cartPaidInput').value.trim();
+        let paid = total;
+        if (paidRaw !== '') {
+          paid = Math.max(0, parseInt(paidRaw, 10) || 0);
+        }
+
+        if (paymentMethod !== 'Credit' && paid < total) {
+          showToast(currentLang === 'mm' ? `⚠️ ပေးငွေ မလုံလောက်ပါ (လိုငွေ: ${formatMoney(total - paid)})` : `Insufficient payment`);
+          playTone(300, 0.2);
+          return;
+        }
         const change = Math.max(0, paid - total);
 
-        db.cart.forEach(item => {
-          const prod = db.products.find(p => p.id === item.productId);
-          if (prod) {
-            prod.stock = Math.max(0, prod.stock - item.qty);
-            db.stockMovements.unshift({
-              id: 'mv_' + Date.now() + '_' + Math.random().toString(36).substring(2, 6),
-              date: new Date().toISOString(),
-              productId: prod.id,
-              productName: prod.name,
-              type: 'out',
-              qty: item.qty,
-              reason: 'POS Sale Checkout',
-              operator: db.currentUser ? db.currentUser.name : 'Owner'
-            });
+        // Determine price tier (Mixed if cart contains both retail and wholesale items)
+        const hasRetail = db.cart.some(i => i.priceType !== 'wholesale');
+        const hasWholesale = db.cart.some(i => i.priceType === 'wholesale');
+        const orderPriceTier = (hasRetail && hasWholesale) ? 'mixed' : (hasWholesale ? 'wholesale' : 'retail');
+
+        // Prevent double click checkout
+        isCheckingOut = true;
+        checkoutPrintBtn.disabled = true;
+        checkoutOnlyBtn.disabled = true;
+
+        try {
+          db.cart.forEach(item => {
+            const prod = db.products.find(p => p.id === item.productId);
+            if (prod) {
+              prod.stock = Math.max(0, prod.stock - item.qty);
+              db.stockMovements.unshift({
+                id: 'mv_' + Date.now() + '_' + Math.random().toString(36).substring(2, 6),
+                date: new Date().toISOString(),
+                productId: prod.id,
+                productName: prod.name,
+                type: 'out',
+                qty: item.qty,
+                reason: 'POS Sale Checkout',
+                operator: db.currentUser ? db.currentUser.name : 'Owner'
+              });
+            }
+          });
+
+          const receiptNo = '#' + (1000 + db.sales.length + 1);
+          const saleRecord = {
+            id: 'sale_' + Date.now(),
+            receiptNo,
+            date: new Date().toISOString(),
+            customerName: customerName || (orderPriceTier === 'wholesale' ? (currentLang === 'mm' ? 'လက်ကားဖောက်သည်' : 'Wholesale Client') : (orderPriceTier === 'mixed' ? (currentLang === 'mm' ? 'အထွေထွေဝယ်သူ (လက်လီ/လက်ကား)' : 'General Customer (Mixed)') : (currentLang === 'mm' ? 'အထွေထွေဝယ်သူ' : 'General Customer'))),
+            paymentMethod,
+            priceTier: orderPriceTier,
+            items: JSON.parse(JSON.stringify(db.cart)),
+            subtotal,
+            discount,
+            total,
+            paid,
+            change,
+            profit,
+            cashier: db.currentUser ? db.currentUser.name : 'Owner'
+          };
+
+          db.sales.unshift(saleRecord);
+          currentActiveSale = saleRecord;
+
+          db.cart = [];
+          cartDiscountInput.value = '0';
+          document.getElementById('cartPaidInput').value = '';
+          document.getElementById('cartCustomerNameInput').value = '';
+
+          toggleMobileCart(false);
+          saveDatabase();
+          renderAll();
+          playTone(1050, 0.15);
+          showToast(currentLang === 'mm' ? `အရောင်းအောင်မြင်ပါသည် (${saleRecord.receiptNo})` : `Sale successful (${saleRecord.receiptNo})`);
+
+          if (printSlip) {
+            openReceiptModal(saleRecord);
           }
-        });
-
-        const receiptNo = '#' + (1000 + db.sales.length + 1);
-        const saleRecord = {
-          id: 'sale_' + Date.now(),
-          receiptNo,
-          date: new Date().toISOString(),
-          customerName: customerName || (db.cartPriceMode === 'wholesale' ? (currentLang === 'mm' ? 'လက်ကားဖောက်သည်' : 'Wholesale Client') : (currentLang === 'mm' ? 'အထွေထွေဝယ်သူ' : 'General Customer')),
-          paymentMethod,
-          priceTier: db.cartPriceMode,
-          items: JSON.parse(JSON.stringify(db.cart)),
-          subtotal,
-          discount,
-          total,
-          paid,
-          change,
-          profit,
-          cashier: db.currentUser ? db.currentUser.name : 'Owner'
-        };
-
-        db.sales.unshift(saleRecord);
-        currentActiveSale = saleRecord;
-
-        db.cart = [];
-        cartDiscountInput.value = '0';
-        document.getElementById('cartPaidInput').value = '';
-        document.getElementById('cartCustomerNameInput').value = '';
-
-        toggleMobileCart(false);
-        saveDatabase();
-        renderAll();
-        playTone(1050, 0.15);
-        showToast(currentLang === 'mm' ? `အရောင်းအောင်မြင်ပါသည် (${saleRecord.receiptNo})` : `Sale successful (${saleRecord.receiptNo})`);
-
-        if (printSlip) {
-          openReceiptModal(saleRecord);
+        } finally {
+          isCheckingOut = false;
+          checkoutPrintBtn.disabled = false;
+          checkoutOnlyBtn.disabled = false;
         }
       }
 
@@ -2653,9 +3157,19 @@
         document.getElementById('rcptPayMethod').textContent = sale.paymentMethod;
         document.getElementById('rcptCustomerName').textContent = sale.customerName;
 
-        const isWs = (sale.priceTier === 'wholesale') || sale.items.some(i => i.priceType === 'wholesale');
-        document.getElementById('rcptTierBadge').textContent = isWs ? (currentLang === 'mm' ? '[လက်ကားအရောင်း]' : '[Wholesale]') : (currentLang === 'mm' ? '[လက်လီအရောင်း]' : '[Retail]');
-        document.getElementById('rcptTierBadge').style.color = isWs ? 'var(--wholesale)' : 'var(--primary)';
+        const hasWs = sale.items.some(i => i.priceType === 'wholesale');
+        const hasRt = sale.items.some(i => i.priceType !== 'wholesale');
+        let tierText = currentLang === 'mm' ? '[လက်လီအရောင်း]' : '[Retail]';
+        let tierColor = 'var(--primary)';
+        if (hasWs && hasRt) {
+          tierText = currentLang === 'mm' ? '[လက်လီ/လက်ကားစုံ]' : '[Mixed Price]';
+          tierColor = 'var(--wholesale)';
+        } else if (hasWs) {
+          tierText = currentLang === 'mm' ? '[လက်ကားအရောင်း]' : '[Wholesale]';
+          tierColor = 'var(--wholesale)';
+        }
+        document.getElementById('rcptTierBadge').textContent = tierText;
+        document.getElementById('rcptTierBadge').style.color = tierColor;
 
         let itemsHtml = '';
         sale.items.forEach(i => {
@@ -2764,10 +3278,16 @@
 
       confirmPricePassBtn.addEventListener('click', () => {
         const pass = unlockPricePassInput.value.trim();
-        const correct = db.store.ownerPin || '1234';
-        if (pass === correct || pass === '1234') {
+        const ownerPin = (db && db.store && db.store.ownerPin) ? db.store.ownerPin : '1234';
+
+        if (pass === ownerPin || pass === '1234') {
           pricePasswordModal.classList.add('hidden');
           unlockPriceFields();
+          if (pendingUnlockCallback) {
+            const cb = pendingUnlockCallback;
+            pendingUnlockCallback = null;
+            cb();
+          }
         } else {
           showToast(currentLang === 'mm' ? '❌ Password မှားယွင်းပါသည်' : 'Incorrect Password');
           playTone(300, 0.2);
@@ -2843,7 +3363,8 @@
       });
 
       function openProductModal(prod = null) {
-        lockPriceFields();
+        // Since user is already inside password-protected Products page, unlock price fields directly
+        unlockPriceFields();
         const catSelect = document.getElementById('pFormCategory');
         catSelect.innerHTML = db.categories.map(c => `<option value="${escapeHtml(c.name)}">${escapeHtml(c.name)}</option>`).join('');
 
@@ -2889,8 +3410,12 @@
         productModal.classList.remove('hidden');
       }
 
-      addProductModalBtn.addEventListener('click', () => openProductModal());
-      quickAddProductBtn.addEventListener('click', () => openProductModal());
+      addProductModalBtn.addEventListener('click', () => {
+        requireOwnerAuth(() => openProductModal(), currentLang === 'mm' ? 'ပစ္စည်းအသစ်ထည့်ရန် ဆိုင်ရှင် Password / PIN ရိုက်ထည့်ပါ:' : 'Enter Owner PIN to add product:');
+      });
+      quickAddProductBtn.addEventListener('click', () => {
+        requireOwnerAuth(() => openProductModal(), currentLang === 'mm' ? 'ပစ္စည်းအသစ်ထည့်ရန် ဆိုင်ရှင် Password / PIN ရိုက်ထည့်ပါ:' : 'Enter Owner PIN to add product:');
+      });
       closeProductModalBtn.addEventListener('click', () => productModal.classList.add('hidden'));
       cancelProductBtn.addEventListener('click', () => productModal.classList.add('hidden'));
 
@@ -2995,14 +3520,23 @@
               <td><span style="color: var(--wholesale); font-weight: 700;">${formatMoney(p.wholesalePrice)}</span></td>
               <td><span class="badge ${isLow ? 'badge-danger' : 'badge-retail'}">${p.stock}</span></td>
               <td style="text-align: right; white-space: nowrap;">
-                <button class="btn-secondary btn-sm edit-prod-btn" data-id="${p.id}"><i class="fas fa-pen"></i></button>
-                <button class="btn-ghost btn-sm delete-prod-btn" data-id="${p.id}" style="color: var(--danger);"><i class="fas fa-trash"></i></button>
+                <button type="button" class="btn-warning btn-sm quick-price-btn" data-id="${p.id}" title="ဈေးတက်/ဈေးကျ အမြန်ပြင်ဆင်မည်" style="padding: 4px 8px; font-size: 11px;">
+                  <i class="fas fa-tag"></i> ဈေးပြင်
+                </button>
+                <button type="button" class="btn-secondary btn-sm edit-prod-btn" data-id="${p.id}" title="အသေးစိတ် အချက်အလက်ပြင်မည်"><i class="fas fa-pen"></i></button>
+                <button type="button" class="btn-ghost btn-sm delete-prod-btn" data-id="${p.id}" style="color: var(--danger);" title="ဖျက်ပစ်မည်"><i class="fas fa-trash"></i></button>
               </td>
             </tr>
           `;
         });
         tbody.innerHTML = html;
 
+        tbody.querySelectorAll('.quick-price-btn').forEach(btn => {
+          btn.addEventListener('click', () => {
+            const p = db.products.find(x => x.id === btn.dataset.id);
+            if (p) openQuickPriceModal(p);
+          });
+        });
         tbody.querySelectorAll('.edit-prod-btn').forEach(btn => {
           btn.addEventListener('click', () => {
             const p = db.products.find(x => x.id === btn.dataset.id);
@@ -3110,8 +3644,25 @@
         const todayStr = new Date().toISOString().slice(0, 10);
         const todaySales = db.sales.filter(s => s.date.startsWith(todayStr));
         const todayRev = todaySales.reduce((acc, s) => acc + s.total, 0);
-        const todayWholesale = todaySales.filter(s => s.priceTier === 'wholesale' || s.items.some(i => i.priceType === 'wholesale')).reduce((acc, s) => acc + s.total, 0);
-        const todayRetail = todayRev - todayWholesale;
+        let todayWholesale = 0;
+        let todayRetail = 0;
+        todaySales.forEach(s => {
+          let saleWs = 0;
+          let saleRt = 0;
+          s.items.forEach(i => {
+            if (i.priceType === 'wholesale') saleWs += i.subtotal;
+            else saleRt += i.subtotal;
+          });
+          const totalSub = saleWs + saleRt;
+          if (totalSub > 0 && s.discount > 0) {
+            const wsRatio = saleWs / totalSub;
+            todayWholesale += Math.max(0, saleWs - (s.discount * wsRatio));
+            todayRetail += Math.max(0, saleRt - (s.discount * (1 - wsRatio)));
+          } else {
+            todayWholesale += saleWs;
+            todayRetail += saleRt;
+          }
+        });
         const todayGrossProfit = todaySales.reduce((acc, s) => acc + (s.profit || 0), 0);
 
         const todayExpenses = db.expenses.filter(e => e.date.startsWith(todayStr));
@@ -3168,9 +3719,21 @@
           let dayRetail = 0;
           let dayWholesale = 0;
           daySales.forEach(s => {
-            const isWs = (s.priceTier === 'wholesale') || s.items.some(i => i.priceType === 'wholesale');
-            if (isWs) dayWholesale += s.total;
-            else dayRetail += s.total;
+            let saleWs = 0;
+            let saleRt = 0;
+            s.items.forEach(i => {
+              if (i.priceType === 'wholesale') saleWs += i.subtotal;
+              else saleRt += i.subtotal;
+            });
+            const totalSub = saleWs + saleRt;
+            if (totalSub > 0 && s.discount > 0) {
+              const wsRatio = saleWs / totalSub;
+              dayWholesale += Math.max(0, Math.round(saleWs - (s.discount * wsRatio)));
+              dayRetail += Math.max(0, Math.round(saleRt - (s.discount * (1 - wsRatio))));
+            } else {
+              dayWholesale += saleWs;
+              dayRetail += saleRt;
+            }
           });
           retailData.push(dayRetail);
           wholesaleData.push(dayWholesale);
@@ -3370,7 +3933,6 @@
         document.getElementById('setShopAddress').value = db.store.address || '';
         document.getElementById('setReceiptFooter').value = db.store.receiptFooter || '';
         document.getElementById('setOwnerPin').value = db.store.ownerPin || '1234';
-        document.getElementById('setStaffPin').value = db.store.staffPin || '0000';
       }
 
       document.getElementById('storeSettingsForm').addEventListener('submit', (e) => {
@@ -3380,7 +3942,6 @@
         db.store.address = document.getElementById('setShopAddress').value.trim();
         db.store.receiptFooter = document.getElementById('setReceiptFooter').value.trim();
         db.store.ownerPin = document.getElementById('setOwnerPin').value.trim() || '1234';
-        db.store.staffPin = document.getElementById('setStaffPin').value.trim() || '0000';
 
         document.getElementById('sidebarShopName').textContent = db.store.name;
         saveDatabase();
@@ -3511,6 +4072,29 @@
         }
       }
 
+      // Wire up Removed Items Modal
+      const removedItemsModal = document.getElementById('removedItemsModal');
+      const openRemovedItemsBtn = document.getElementById('openRemovedItemsBtn');
+      const closeRemovedModalBtn = document.getElementById('closeRemovedModalBtn');
+      const closeRemovedItemsBottomBtn = document.getElementById('closeRemovedItemsBottomBtn');
+      const clearAllRemovedBtn = document.getElementById('clearAllRemovedBtn');
+
+      if (openRemovedItemsBtn) {
+        openRemovedItemsBtn.addEventListener('click', () => {
+          renderRemovedItemsList();
+          removedItemsModal.classList.remove('hidden');
+        });
+      }
+      if (closeRemovedModalBtn) {
+        closeRemovedModalBtn.addEventListener('click', () => removedItemsModal.classList.add('hidden'));
+      }
+      if (closeRemovedItemsBottomBtn) {
+        closeRemovedItemsBottomBtn.addEventListener('click', () => removedItemsModal.classList.add('hidden'));
+      }
+      if (clearAllRemovedBtn) {
+        clearAllRemovedBtn.addEventListener('click', clearAllRemovedItems);
+      }
+
       scanCameraBtn.addEventListener('click', () => openScanner('pos'));
       pFormScanBtn.addEventListener('click', () => openScanner('product_form'));
       closeScannerModalBtn.addEventListener('click', closeScanner);
@@ -3548,6 +4132,82 @@
       document.addEventListener('click', () => {
         themeDropdown.classList.add('hidden');
       });
+
+
+      // Feature: Quick Price Update (ဈေးတက်/ဈေးကျ အမြန်ပြင်ဆင်ခြင်း)
+      const quickPriceModal = document.getElementById('quickPriceModal');
+      const closeQuickPriceModalBtn = document.getElementById('closeQuickPriceModalBtn');
+      const cancelQuickPriceBtn = document.getElementById('cancelQuickPriceBtn');
+      const quickPriceForm = document.getElementById('quickPriceForm');
+
+      function openQuickPriceModal(prod) {
+        if (!prod) return;
+        document.getElementById('qpProdId').value = prod.id;
+        document.getElementById('qpProdName').textContent = prod.name;
+        document.getElementById('qpProdBarcode').textContent = `Barcode: ${prod.barcode || '-'}`;
+        document.getElementById('qpProdStock').textContent = `Stock: ${prod.stock}`;
+        
+        const thumb = document.getElementById('qpProdThumb');
+        if (prod.image) {
+          thumb.src = prod.image;
+          thumb.style.display = 'block';
+        } else {
+          thumb.src = "data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 40 40'><rect width='40' height='40' fill='%23e0f2fe'/><text x='20' y='25' font-size='16' text-anchor='middle'>📦</text></svg>";
+        }
+
+        document.getElementById('qpCostPrice').value = prod.costPrice || 0;
+        document.getElementById('qpRetailPrice').value = prod.retailPrice || 0;
+        document.getElementById('qpWholesalePrice').value = prod.wholesalePrice || 0;
+
+        quickPriceModal.classList.remove('hidden');
+        setTimeout(() => document.getElementById('qpRetailPrice').focus(), 100);
+      }
+
+      if (closeQuickPriceModalBtn) {
+        closeQuickPriceModalBtn.addEventListener('click', () => quickPriceModal.classList.add('hidden'));
+      }
+      if (cancelQuickPriceBtn) {
+        cancelQuickPriceBtn.addEventListener('click', () => quickPriceModal.classList.add('hidden'));
+      }
+
+      if (quickPriceForm) {
+        quickPriceForm.addEventListener('submit', (e) => {
+          e.preventDefault();
+          const pId = document.getElementById('qpProdId').value;
+          const prod = db.products.find(p => p.id === pId);
+          if (!prod) return;
+
+          const newCost = parseInt(document.getElementById('qpCostPrice').value, 10) || 0;
+          const newRetail = parseInt(document.getElementById('qpRetailPrice').value, 10) || 0;
+          const newWholesale = parseInt(document.getElementById('qpWholesalePrice').value, 10) || 0;
+
+          if (newRetail <= 0 && newWholesale <= 0) {
+            showToast(currentLang === 'mm' ? '⚠️ လက်လီ သို့မဟုတ် လက်ကားဈေး အနည်းဆုံး တစ်ခု သတ်မှတ်ပေးပါ' : 'Please enter at least retail or wholesale price');
+            return;
+          }
+
+          prod.costPrice = newCost;
+          prod.retailPrice = newRetail;
+          prod.wholesalePrice = newWholesale;
+
+          saveDatabase();
+          renderProductsTable();
+          renderPosProducts();
+          quickPriceModal.classList.add('hidden');
+          playTone(1050, 0.1);
+          showToast(currentLang === 'mm' ? `"${prod.name}" ၏ ဈေးနှုန်းအသစ်များ အောင်မြင်စွာ ပြင်ဆင်ပြီးပါပြီ` : `Updated prices for ${prod.name}`);
+        });
+      }
+
+      // Lock button on Products Page
+      const lockProductsPageBtn = document.getElementById('lockProductsPageBtn');
+      if (lockProductsPageBtn) {
+        lockProductsPageBtn.addEventListener('click', () => {
+          isProductsUnlocked = false;
+          switchPage('pos');
+          showToast(currentLang === 'mm' ? '🔒 ကုန်စည်စာရင်းအား ပြန်လည်သော့ခတ်လိုက်ပါပြီ' : 'Products catalog locked');
+        });
+      }
 
       function renderAll() {
         renderPosCategories();
